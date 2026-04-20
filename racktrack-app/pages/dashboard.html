@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rack Track | Admin Dashboard</title>
+
+  <link rel="icon" type="image/png" href="../assets/images/logo.png" />
+  <link rel="shortcut icon" href="../assets/images/logo.png" />
+  <link rel="apple-touch-icon" href="../assets/images/logo.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../assets/css/dashboard.css" />
+</head>
+<body>
+  <div class="app-shell" id="appShell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-block">
+        <img src="../assets/images/logo.png" alt="Rack Track logo" class="brand-logo" />
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-link active" data-section="dashboard-section" type="button">
+          <img src="../assets/images/dashboard.png" alt="Dashboard icon" />
+          <span>Dashboard</span>
+        </button>
+
+        <button class="nav-link" data-section="inventory-section" type="button">
+          <img src="../assets/images/Inventory.png" alt="Inventory icon" />
+          <span>Inventory</span>
+        </button>
+
+        <button class="nav-link" data-section="pos-section" type="button">
+          <img src="../assets/images/Orders.png" alt="POS icon" />
+          <span>POS</span>
+        </button>
+
+        <button class="nav-link" data-section="reports-section" type="button">
+          <img src="../assets/images/Report.png" alt="Report icon" />
+          <span>Report</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="text-link" id="settingsBtn" type="button">
+          <img src="../assets/images/Setting Icon.png" alt="Settings">
+          <span>Settings</span>
+        </button>
+
+        <button class="text-link" id="logoutBtn" type="button">
+          <img src="../assets/images/Log Out Icon.png" alt="Log Out">
+          <span>Log Out</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" id="menuToggle" aria-label="Toggle sidebar" type="button">☰</button>
+
+          <label class="search-wrap">
+            <span class="search-icon">⌕</span>
+            <input id="globalSearch" type="search" placeholder="Search" />
+          </label>
+        </div>
+
+        <div class="user-box" id="userBox">
+          <span class="user-name" id="topbarUsername">Admin</span>
+        </div>
+
+        <div class="topbar-right">
+          <button class="icon-btn notification-btn" id="notificationBtn" aria-label="Notifications" type="button">
+            <img src="../assets/images/galaBell0.png" alt="Notifications" class="topbar-icon-img" />
+          </button>
+
+          <button class="icon-btn profile-btn" id="profileBtn" aria-label="Profile" type="button">
+            <img src="../assets/images/Vector (5).png" alt="Profile" class="topbar-icon-img" />
+          </button>
+        </div>
+      </header>
+
+      <!-- DASHBOARD -->
+      <section class="page-section active" id="dashboard-section">
+        <section class="hero-panel">
+          <div class="hero-left">
+            <h1>Sales Activity</h1>
+
+            <div class="sales-grid">
+              <article class="activity-card">
+                <div class="metric-value success" id="packedCount">0</div>
+                <div class="metric-unit">quantity</div>
+                <div class="activity-meta">
+                  <img src="../assets/images/packed.png" alt="Packed icon" />
+                  <span>TO BE PACKED</span>
+                </div>
+              </article>
+
+              <article class="activity-card">
+                <div class="metric-value success" id="shippedCount">0</div>
+                <div class="metric-unit">package</div>
+                <div class="activity-meta">
+                  <img src="../assets/images/shipping.png" alt="Shipping icon" />
+                  <span>TO BE SHIPPED</span>
+                </div>
+              </article>
+
+              <article class="activity-card">
+                <div class="metric-value success" id="deliveredCount">0</div>
+                <div class="metric-unit">package</div>
+                <div class="activity-meta">
+                  <img src="../assets/images/quantity.png" alt="Delivery icon" />
+                  <span>TO BE DELIVERED</span>
+                </div>
+              </article>
+
+              <article class="activity-card">
+                <div class="metric-value success" id="invoicedCount">0</div>
+                <div class="metric-unit">quantity</div>
+                <div class="activity-meta">
+                  <img src="../assets/images/package.png" alt="Invoice icon" />
+                  <span>TO BE INVOICED</span>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <aside class="hero-summary">
+            <h2>Inventory Summary</h2>
+            <p>(In Quantity)</p>
+
+            <div class="summary-stack">
+              <div class="summary-chip">
+                <span>In-stock</span>
+                <strong id="inventorySummaryInStock">0</strong>
+              </div>
+
+              <div class="summary-chip">
+                <span>Re-stock</span>
+                <strong id="inventorySummaryRestock">0</strong>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <section class="stats-row">
+          <article class="stat-card">
+            <div class="stat-top">
+              <img src="../assets/images/total_revenue.png" class="stat-icon" alt="Today's Profit icon" />
+              <svg class="mini-graph" viewBox="0 0 120 40" id="revenueGraph">
+                <polyline points="" />
+              </svg>
+            </div>
+
+            <div class="stat-amount" id="dashboardRevenue">₱0.00</div>
+
+            <div class="stat-bottom">
+              <span>Today's Profit</span>
+              <strong id="dashboardRevenuePercent">0%</strong>
+            </div>
+          </article>
+
+          <article class="stat-card">
+            <div class="stat-top">
+              <img src="../assets/images/total_expenses.png" class="stat-icon" alt="Total Expenses icon" />
+              <svg class="mini-graph" viewBox="0 0 120 40" id="expenseGraph">
+                <polyline points="" />
+              </svg>
+            </div>
+
+            <div class="stat-amount" id="dashboardExpenses">₱0.00</div>
+
+            <div class="stat-bottom">
+              <span>Total Expenses</span>
+              <strong id="dashboardExpensesPercent">0%</strong>
+            </div>
+          </article>
+
+          <article class="stat-card">
+            <div class="stat-top">
+              <img src="../assets/images/Group.png" class="stat-icon" alt="Customers icon" />
+              <svg class="mini-graph" viewBox="0 0 120 40" id="customerGraph">
+                <polyline points="" />
+              </svg>
+            </div>
+
+            <div class="stat-amount" id="dashboardCustomersCount">0</div>
+
+            <div class="stat-bottom">
+              <span>Total Customer</span>
+              <strong id="dashboardCustomersPercent">0%</strong>
+            </div>
+          </article>
+
+          <article class="stat-card">
+            <div class="stat-top">
+              <img src="../assets/images/total_order.png" class="stat-icon" alt="Orders icon" />
+              <svg class="mini-graph" viewBox="0 0 120 40" id="orderGraph">
+                <polyline points="" />
+              </svg>
+            </div>
+
+            <div class="stat-amount" id="dashboardOrdersCount">0</div>
+
+            <div class="stat-bottom">
+              <span>Total Order</span>
+              <strong id="dashboardOrdersPercent">0%</strong>
+            </div>
+          </article>
+        </section>
+
+        <section class="dashboard-bottom-grid">
+          <article class="panel inventory-panel">
+            <div class="panel-head split-head">
+              <div>
+                <h3>Inventory</h3>
+                <p>Low in stock</p>
+              </div>
+
+              <div class="align-right">
+                <button class="ghost-link" type="button" data-jump="inventory-section">view all</button>
+                <strong id="lowStockItemsCount">0 items</strong>
+              </div>
+            </div>
+
+            <div class="warning-banner">This item is low of stock, please order it soon!</div>
+
+            <div class="low-stock-list" id="lowStockList">
+              <div class="empty-state">No low stock items.</div>
+            </div>
+          </article>
+
+          <article class="panel top-selling-panel">
+            <div class="panel-head split-head">
+              <h3>Top Selling</h3>
+              <span class="filter-pill">This month ▾</span>
+            </div>
+
+            <table class="simple-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Sold</th>
+                  <th>Price</th>
+                </tr>
+              </thead>
+              <tbody id="topSellingBody">
+                <tr>
+                  <td colspan="3" class="empty-state">No sales data yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </article>
+
+          <article class="panel recent-orders-panel">
+            <div class="panel-head split-head">
+              <h3>Recent POS</h3>
+              <button class="ghost-link" type="button" data-jump="pos-section">view all</button>
+            </div>
+
+            <div class="recent-list" id="recentOrdersList">
+              <div class="empty-state">No recent POS records.</div>
+            </div>
+          </article>
+        </section>
+      </section>
+
+      <!-- INVENTORY -->
+      <section class="page-section" id="inventory-section">
+        <div class="inventory-layout">
+          <div class="inventory-top-panel">
+            <div class="crud-header inventory-header-clean">
+              <div class="inventory-title-block">
+                <h2>Inventory Management</h2>
+                <p>Manage stock items and master product list.</p>
+              </div>
+
+              <div class="inventory-header-actions">
+                <button class="secondary-btn inventory-top-tab active" type="button" data-inventory-tab="items">
+                  Inventory Items
+                </button>
+
+                <button class="secondary-btn inventory-top-tab" type="button" data-inventory-tab="products">
+                  Products
+                </button>
+
+                <button class="secondary-btn category-btn" type="button" id="openCategoryBtn">
+                  + Category
+                </button>
+
+                <button class="primary-btn inventory-main-btn" type="button" id="inventoryMainActionBtn">
+                  + Add Item
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="inventory-bottom-panel">
+            <div class="inventory-subsection active" id="inventory-items-view">
+              <div class="crud-card inventory-card">
+                <div class="table-tools inventory-tools inventory-tools-split">
+                  <input type="search" id="inventorySearch" placeholder="Search product name, SKU, or Product ID..." />
+                  <select id="inventoryCategorySort">
+                    <option value="all">All Categories</option>
+                  </select>
+                </div>
+
+                <div class="table-wrap">
+                  <table>
+                    <tbody id="inventoryTableBody">
+                      <tr>
+                        <td colspan="15" class="empty-state">No inventory records found.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="inventory-subsection" id="inventory-products-view">
+              <div class="crud-card inventory-card">
+                <div class="table-tools inventory-tools inventory-tools-split">
+                  <input type="search" id="productsSearch" placeholder="Search product name, SKU, or Product ID..." />
+                  <select id="productsCategorySort">
+                    <option value="all">All Categories</option>
+                  </select>
+                </div>
+
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Image</th>
+                        <th>Product ID</th>
+                        <th>Product Name</th>
+                        <th>SKU</th>
+                        <th>Supplier</th>
+                        <th>Color</th>
+                        <th>Size</th>
+                        <th>Material</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Cost</th>
+                        <th>SRP</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                      <tr>
+                        <td colspan="13" class="empty-state">No products found.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="inventory-history-panel">
+            <div class="crud-card inventory-card stock-history-card">
+              <div class="stock-history-head">
+                <div>
+                  <h3>Inventory Movement History</h3>
+                  <p>Time and date record of stock changes, sold items, and stock activity.</p>
+                </div>
+
+                <div class="table-tools inventory-tools inventory-tools-split">
+                  <input type="search" id="stockHistorySearch" placeholder="Search movement history..." />
+                  <input type="date" id="stockHistoryDateFilter" />
+                  <select id="stockHistoryCategorySort">
+                    <option value="all">All Categories</option>
+                  </select>
+                  <button type="button" class="secondary-btn" id="stockHistoryLatestBtn">Latest</button>
+                </div>
+              </div>
+
+              <div class="table-wrap">
+                <table class="stock-history-table">
+                  <tbody id="stockHistoryTableBody">
+                    <tr>
+                      <td colspan="12" class="empty-state">No stock movement history yet.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- POS -->
+      <section class="page-section" id="pos-section">
+        <div class="pos-layout">
+          <div class="pos-top-panel">
+            <div class="crud-header pos-header-clean">
+              <div class="pos-title-block">
+                <h2>POS</h2>
+                <p>Sell items, prepare quotation or invoice, and generate receipt.</p>
+              </div>
+
+              <div class="pos-header-actions pos-header-actions-left">
+                <button
+                  class="secondary-btn pos-top-tab active"
+                  type="button"
+                  id="posCompletedTabBtn"
+                  data-pos-view="completed"
+                >
+                  Completed Transaction
+                </button>
+
+                <button
+                  class="secondary-btn pos-top-tab"
+                  type="button"
+                  id="posShopTabBtn"
+                  data-pos-view="shop"
+                >
+                  Shopping Cart
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="pos-bottom-panel">
+            <div class="pos-subsection active" id="pos-completed-view">
+              <div class="crud-card pos-card inventory-card">
+                <div class="pos-market-head pos-completed-head">
+                  <div>
+                    <h3>Completed Transaction</h3>
+                    <p>View completed sales records including grouped transactions, customer details, pricing, revenue, and profit.</p>
+                  </div>
+
+                  <div class="table-tools inventory-tools pos-tools">
+                    <div class="pos-tools-right">
+                      <input
+                        type="search"
+                        id="posSearchInput"
+                        placeholder="Search transaction ID, product, SKU, Product ID, customer, receipt..."
+                      />
+
+                      <input
+                        type="date"
+                        id="posDateFilter"
+                      />
+
+                      <select id="posCategorySort">
+                        <option value="all">All Categories</option>
+                      </select>
+
+                      <button
+                        type="button"
+                        class="secondary-btn"
+                        id="posLatestBtn"
+                      >
+                        Latest
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="table-wrap">
+                  <table class="pos-main-table inventory-like-pos-table">
+                    <thead>
+                      <tr>
+                        <th>Image</th>
+                        <th>Completed Transaction ID</th>
+                        <th>Product ID</th>
+                        <th>Product / Items</th>
+                        <th>Customer Name</th>
+                        <th>SKU</th>
+                        <th>Variant</th>
+                        <th>Category</th>
+                        <th>Total Qty</th>
+                        <th>Total Revenue</th>
+                        <th>Total Profit</th>
+                        <th>Item Type</th>
+                      </tr>
+                    </thead>
+                    <tbody id="posTableBody">
+                      <tr>
+                        <td colspan="12" class="empty-state">No completed POS records found.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="table-pagination" id="posCompletedPagination"></div>
+              </div>
+            </div>
+
+            <div class="pos-subsection" id="pos-shop-view">
+              <div class="pos-shop-layout">
+                <div class="pos-shop-left">
+                  <div class="crud-card pos-card pos-market-card">
+                    <div class="pos-market-head">
+                      <div>
+                        <h3>Inventory Listing</h3>
+                        <p>Select items from inventory like an online product listing.</p>
+                      </div>
+
+                      <div class="pos-market-tools">
+                        <input type="search" id="posShopSearchInput" placeholder="Search item, SKU, Product ID, size, color..." />
+                        <select id="posShopCategorySort">
+                          <option value="all">All Categories</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="pos-product-grid" id="posProductGrid">
+                      <div class="empty-state">No sellable inventory found.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pos-shop-right">
+                  <div class="crud-card pos-card pos-quote-card">
+                    <div class="pos-quote-head">
+                      <div>
+                        <h3>Quotation / Invoice</h3>
+                        <p>Build order details before checkout.</p>
+                      </div>
+
+                      <button type="button" class="secondary-btn" id="posClearCartBtn">Clear</button>
+                    </div>
+
+                    <div class="pos-customer-form">
+                      <div class="form-field">
+                        <label>Customer Name</label>
+                        <input type="text" id="posCartCustomerName" placeholder="Enter customer name" />
+                      </div>
+
+                      <div class="form-field">
+                        <label>Contact</label>
+                        <input type="text" id="posCartCustomerContact" placeholder="Phone / email" />
+                      </div>
+
+                      <div class="form-field">
+                        <label>Address</label>
+                        <textarea id="posCartCustomerAddress" placeholder="Customer address"></textarea>
+                      </div>
+
+                      <div class="pos-cart-form-two">
+                        <div class="form-field">
+                          <label>Discount</label>
+                          <input type="number" id="posCartDiscount" min="0" value="0" />
+                        </div>
+
+                        <div class="form-field">
+                          <label>Amount Paid</label>
+                          <input type="number" id="posCartPaid" min="0" value="0" />
+                        </div>
+                      </div>
+
+                      <div class="form-field">
+                        <label>Note</label>
+                        <textarea id="posCartNote" placeholder="Optional note"></textarea>
+                      </div>
+                    </div>
+
+                    <div class="pos-cart-items" id="posCartItems">
+                      <div class="empty-state">No items added yet.</div>
+                    </div>
+
+                    <div class="pos-summary-card">
+                      <div class="pos-summary-line">
+                        <span>Subtotal</span>
+                        <strong id="posSummarySubtotal">₱0.00</strong>
+                      </div>
+
+                      <div class="pos-summary-line">
+                        <span>Discount</span>
+                        <strong id="posSummaryDiscount">₱0.00</strong>
+                      </div>
+
+                      <div class="pos-summary-line total">
+                        <span>Total</span>
+                        <strong id="posSummaryTotal">₱0.00</strong>
+                      </div>
+
+                      <div class="pos-summary-line">
+                        <span>Paid</span>
+                        <strong id="posSummaryPaid">₱0.00</strong>
+                      </div>
+
+                      <div class="pos-summary-line">
+                        <span>Change</span>
+                        <strong id="posSummaryChange">₱0.00</strong>
+                      </div>
+                    </div>
+
+                    <div class="pos-doc-actions">
+                      <button type="button" class="secondary-btn" id="posPreviewQuoteBtn">Quotation</button>
+                      <button type="button" class="secondary-btn" id="posPreviewInvoiceBtn">Invoice</button>
+                      <button type="button" class="primary-btn" id="posCheckoutBtn">Checkout</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CUSTOMERS -->
+      <section class="page-section" id="customers-section">
+        <div class="crud-header">
+          <div>
+            <h2>Customer Management</h2>
+            <p>Maintain customer information from one place.</p>
+          </div>
+          <button class="primary-btn" type="button" data-open-modal="customers">+ Add Customer</button>
+        </div>
+
+        <div class="crud-card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Address</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="customersTableBody">
+                <tr>
+                  <td colspan="5" class="empty-state">No customers found.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- REPORTS -->
+      <section class="page-section" id="reports-section">
+        <div class="crud-header">
+          <div>
+            <h2>Quick Reports</h2>
+            <p>Live summary based on your CRUD data.</p>
+          </div>
+        </div>
+
+        <div class="reports-grid">
+          <article class="report-box">
+            <h4>Total Inventory Items</h4>
+            <strong id="reportInventoryCount">0</strong>
+          </article>
+
+          <article class="report-box">
+            <h4>Total Orders</h4>
+            <strong id="reportOrderCount">0</strong>
+          </article>
+
+          <article class="report-box">
+            <h4>Total Customers</h4>
+            <strong id="reportCustomerCount">0</strong>
+          </article>
+
+          <article class="report-box">
+            <h4>Low Stock Items</h4>
+            <strong id="reportLowStockCount">0</strong>
+          </article>
+        </div>
+
+        <div id="quickReportsWrap">
+          <div class="crud-card">
+            <div class="empty-state">No quick reports yet.</div>
+          </div>
+        </div>
+
+        <div class="daily-reports-wrap" id="dailyReportsWrap">
+          <div class="crud-card">
+            <div class="empty-state">No daily report records yet.</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MAIN FORM MODAL -->
+  <div class="modal" id="formModal">
+    <div class="modal-card modal-card-lg">
+      <div class="modal-head">
+        <h3 id="modalTitle">Add Record</h3>
+        <button class="close-btn" id="closeModal" type="button">✕</button>
+      </div>
+      <form id="recordForm"></form>
+    </div>
+  </div>
+
+  <!-- CATEGORY MODAL -->
+  <div class="modal" id="categoryModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>Manage Categories</h3>
+        <button class="close-btn" id="closeCategoryModal" type="button">✕</button>
+      </div>
+
+      <form id="categoryForm" class="category-form">
+        <div class="form-field">
+          <label>Category Name</label>
+          <input type="text" name="categoryName" placeholder="e.g. T-SHIRT" required />
+        </div>
+
+        <div class="form-field">
+          <label>Highlight Color</label>
+          <input type="color" name="categoryColor" id="categoryColor" value="#f2b14c" />
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="secondary-btn" id="cancelCategoryBtn">Cancel</button>
+          <button type="submit" class="primary-btn">Save Category</button>
+        </div>
+      </form>
+
+      <div class="category-list-wrap">
+        <h4>Saved Categories</h4>
+        <div id="categoryList">
+          <div class="empty-state">No categories yet.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGOUT MODAL -->
+  <div class="logout-modal" id="logoutModal">
+    <div class="logout-modal-card">
+      <h3>Log Out</h3>
+      <p>Are you sure you want to continue logging out?</p>
+      <div class="logout-actions">
+        <button type="button" class="logout-cancel-btn" id="cancelLogoutBtn">Cancel</button>
+        <button type="button" class="logout-confirm-btn" id="confirmLogoutBtn">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCUMENT PREVIEW MODAL -->
+  <div class="pos-doc-modal-overlay" id="posDocModalOverlay">
+    <div class="pos-doc-modal">
+      <div class="pos-doc-modal-head">
+        <h3 id="posDocModalTitle">Document Preview</h3>
+        <button type="button" class="pos-doc-close-btn" id="posDocCloseBtn">×</button>
+      </div>
+
+      <div class="pos-doc-modal-body" id="posDocModalBody">
+        <div class="empty-state">No preview available.</div>
+      </div>
+
+      <div class="pos-doc-modal-actions">
+        <button type="button" class="secondary-btn" id="posDocCloseFooterBtn">Close</button>
+        <button type="button" class="primary-btn" id="posDocPrintBtn">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SALE TRANSACTION DETAILS MODAL -->
+  <div class="pos-transaction-modal-overlay" id="posTransactionModalOverlay">
+    <div class="pos-transaction-modal">
+      <div class="pos-transaction-modal-head">
+        <h3 id="posTransactionModalTitle">Transaction Details</h3>
+        <button type="button" class="pos-transaction-close-btn" id="posTransactionCloseBtn">×</button>
+      </div>
+
+      <div class="pos-transaction-modal-body" id="posTransactionModalBody">
+        <div class="empty-state">No transaction selected.</div>
+      </div>
+
+      <div class="pos-transaction-modal-actions">
+        <button type="button" class="secondary-btn" id="posTransactionQuotationBtn">Quotation</button>
+        <button type="button" class="secondary-btn" id="posTransactionInvoiceBtn">Invoice</button>
+        <button type="button" class="primary-btn" id="posTransactionReceiptBtn">Receipt</button>
+        <button type="button" class="secondary-btn" id="posTransactionCloseFooterBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/js/dashboard-core.js"></script>
+  <script src="../assets/js/dashboard-panel-dashboard.js"></script>
+  <script src="../assets/js/dashboard-panel-inventory.js"></script>
+  <script src="../assets/js/dashboard-panel-pos.js"></script>
+  <script src="../assets/js/dashboard-panel-reports.js"></script>
+  <script src="../assets/js/dashboard.js"></script>
+</body>
+</html>

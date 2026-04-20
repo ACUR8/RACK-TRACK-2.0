@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RackTrack | Admin Login</title>
+
+    <link rel="icon" type="image/png" href="../assets/images/logo.png" />
+  <link rel="shortcut icon" href="../assets/images/logo.png" />
+  <link rel="apple-touch-icon" href="../assets/images/logo.png" />
+
+  <link rel="stylesheet" href="../assets/css/style.css" />
+
+  <style>
+    .adminCard{
+      position: relative;
+    }
+
+    .close-btn{
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 38px;
+      height: 38px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.55);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+      transition: transform 0.2s ease, background 0.2s ease;
+      z-index: 10;
+    }
+
+    .close-btn svg{
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: #1e3a8a;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .close-btn:hover{
+      transform: scale(1.08);
+      background: #1e3a8a;
+    }
+
+    .close-btn:hover svg{
+      stroke: #ffffff;
+    }
+
+    .adminCard.closing{
+      opacity: 0;
+      transform: scale(0.96);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    /* =========================
+       PASSWORD TOGGLE
+    ========================= */
+    .password-wrap{
+      position: relative;
+      width: 100%;
+    }
+
+    .password-wrap .input{
+      width: 100%;
+      padding-right: 52px;
+    }
+
+    .toggle-password{
+      position: absolute;
+      top: 50%;
+      right: 14px;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+    }
+
+    .toggle-password svg{
+      width: 22px;
+      height: 22px;
+      stroke: #1e3a8a;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .toggle-password:hover{
+      opacity: 0.75;
+    }
+
+    /* =========================
+       NAME ROW
+    ========================= */
+    .nameRow{
+      display: grid;
+      grid-template-columns: 1fr 1fr 110px;
+      gap: 10px;
+    }
+
+    @media (max-width: 640px){
+      .nameRow{
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* =========================
+       PASSWORD REQUIREMENTS
+    ========================= */
+    .pwRequirementBox{
+      margin-top: 6px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.62);
+      border: 1px solid rgba(31,98,214,.18);
+      box-shadow: 0 6px 18px rgba(0,0,0,.08);
+    }
+
+    .pwReqTitle{
+      margin: 0 0 8px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #1d5cc7;
+    }
+
+    .pwMeter{
+      width: 100%;
+      height: 10px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .pwBar{
+      width: 0%;
+      height: 100%;
+      border-radius: 999px;
+      background: #d1d5db;
+      transition: width 0.25s ease, background 0.25s ease;
+    }
+
+    .pwLabels{
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #8a8a8a;
+      margin-bottom: 8px;
+    }
+
+    .pwLabels span.active-weak{
+      color: #c94848;
+      font-weight: 700;
+    }
+
+    .pwLabels span.active-medium{
+      color: #f2b14c;
+      font-weight: 700;
+    }
+
+    .pwLabels span.active-strong{
+      color: #2f8d46;
+      font-weight: 700;
+    }
+
+    .pwHint{
+      margin: 0 0 6px;
+      font-size: 12px;
+      color: rgba(0,0,0,.72);
+    }
+
+    .pwReqList{
+      margin: 0;
+      padding-left: 18px;
+      font-size: 12px;
+      color: rgba(0,0,0,.82);
+      line-height: 1.6;
+    }
+
+    .pwReqList li.valid{
+      color: #2f8d46;
+      font-weight: 700;
+    }
+
+    .pwReqList li.invalid{
+      color: rgba(0,0,0,.82);
+      font-weight: 400;
+    }
+
+    /* =========================
+       LOGIN SUCCESS SPLASH
+    ========================= */
+    #login-success-overlay{
+      position: fixed;
+      inset: 0;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+
+    #login-success-overlay.show{
+      opacity: 1;
+      visibility: visible;
+      pointer-events: all;
+    }
+
+    #login-success-overlay img{
+      width: 170px;
+      max-width: 42vw;
+      height: auto;
+      object-fit: contain;
+      transform: scale(0.94);
+      opacity: 0;
+    }
+
+    #login-success-overlay.show img{
+      animation: zoomPulse 0.9s ease forwards;
+    }
+
+    @keyframes zoomPulse{
+      0%{
+        transform: scale(0.90);
+        opacity: 0;
+      }
+      40%{
+        transform: scale(1.03);
+        opacity: 1;
+      }
+      100%{
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body class="theme-admin">
+  <div class="bg blurBg"></div>
+  <div class="bgGlow"></div>
+
+  <main class="screen centerOnly">
+    <section class="adminCard" id="frame">
+
+      <button type="button" class="close-btn" onclick="closeAdminCard()">
+        <svg viewBox="0 0 24 24">
+          <path d="M6 6L18 18M18 6L6 18"></path>
+        </svg>
+      </button>
+
+      <h2 class="loginTitle">
+        Log in as Admin
+        <span class="miniIcon">
+          <img src="../assets/images/Vector.svg" alt="Admin Icon">
+        </span>
+      </h2>
+
+      <p class="loginSub">See your growth and get support!</p>
+
+      <form class="form" id="adminForm">
+        <label class="label">User ID:</label>
+        <input
+          class="input"
+          type="text"
+          id="loginUsername"
+          placeholder="Enter your User ID..."
+          required
+        />
+
+        <label class="label">Password:</label>
+        <div class="password-wrap">
+          <input
+            class="input"
+            type="password"
+            id="loginPassword"
+            placeholder="Enter your password..."
+            required
+          />
+          <button type="button" class="toggle-password" data-target="loginPassword" aria-label="Show password">
+            <svg viewBox="0 0 24 24" class="eye-open">
+              <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+
+        <div class="rowBetween">
+          <label class="check">
+            <input type="checkbox" id="rememberMe" />
+            <span>Remember me</span>
+          </label>
+          <a class="link" href="#" onclick="openForgot(event)">Forgot Password</a>
+        </div>
+
+        <p id="loginMsg" class="formMsg"></p>
+
+        <button class="btn wide gradBlueGreen" type="submit">Log in</button>
+
+        <p class="bottomText">
+          Not registered yet?
+          <a class="link" href="#" onclick="openCreate(event)">Create an account</a>
+        </p>
+      </form>
+    </section>
+
+    <div class="overlay" id="overlay" onclick="closeModal()"></div>
+
+    <div class="modal" id="createModal">
+      <div class="modalCard">
+        <button class="closeBtn" type="button" onclick="closeModal()">✕</button>
+
+        <h2 class="modalTitle">Create Account</h2>
+        <p class="modalSub">Fill in your details to create a username and password.</p>
+
+        <form class="form modalForm" id="createForm">
+          <label class="label">Full Name</label>
+          <div class="nameRow">
+            <input class="input" type="text" id="lastName" placeholder="Last Name" required />
+            <input class="input" type="text" id="firstName" placeholder="First Name" required />
+            <input class="input" type="text" id="middleInitial" placeholder="MI" maxlength="3" required />
+          </div>
+
+          <label class="label">Email</label>
+          <input class="input" type="email" id="email" placeholder="Enter your email..." required />
+
+          <label class="label">Username</label>
+          <input class="input" type="text" id="username" placeholder="Create a username..." required />
+
+          <label class="label">Password</label>
+          <div class="password-wrap">
+            <input
+              class="input"
+              type="password"
+              id="password"
+              placeholder="Create a password..."
+              title="Password must include at least 1 uppercase and at least 3 numbers. No special symbols allowed."
+              required
+            />
+            <button type="button" class="toggle-password" data-target="password" aria-label="Show password">
+              <svg viewBox="0 0 24 24" class="eye-open">
+                <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+
+          <div class="pwRequirementBox">
+            <p class="pwReqTitle">Password Requirements</p>
+
+            <div class="pwMeter">
+              <div class="pwBar" id="pwBar"></div>
+            </div>
+
+            <div class="pwLabels">
+              <span id="pwWeak">Weak</span>
+              <span id="pwMedium">Medium</span>
+              <span id="pwStrong">Strong</span>
+            </div>
+
+            <p class="pwHint" id="pwHint">Use at least 1 uppercase and 3 numbers. No symbols.</p>
+
+            <ul class="pwReqList">
+              <li id="reqUpper" class="invalid">At least 1 uppercase letter</li>
+              <li id="reqDigits" class="invalid">At least 3 numbers</li>
+              <li id="reqAllowed" class="invalid">Letters and numbers only (no symbols)</li>
+            </ul>
+          </div>
+
+          <label class="label">Confirm Password</label>
+          <div class="password-wrap">
+            <input class="input" type="password" id="confirmPassword" placeholder="Confirm your password..." required />
+            <button type="button" class="toggle-password" data-target="confirmPassword" aria-label="Show password">
+              <svg viewBox="0 0 24 24" class="eye-open">
+                <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+
+          <p id="createMsg" class="formMsg"></p>
+
+          <button type="submit" class="btn wide gradBlue">Create Account</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal" id="forgotModal">
+      <div class="modalCard">
+        <button class="closeBtn" type="button" onclick="closeModal()">✕</button>
+
+        <h2 class="modalTitle">Reset Password</h2>
+        <p class="modalSub">Enter your account and set a new password.</p>
+
+        <form class="form modalForm" id="forgotForm">
+          <label class="label">Username or Email</label>
+          <input class="input" type="text" id="identifier" placeholder="Enter username or email..." required />
+
+          <label class="label">New Password</label>
+          <div class="password-wrap">
+            <input class="input" type="password" id="newPassword" placeholder="Enter new password..." required />
+            <button type="button" class="toggle-password" data-target="newPassword" aria-label="Show password">
+              <svg viewBox="0 0 24 24" class="eye-open">
+                <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+
+          <label class="label">Confirm Password</label>
+          <div class="password-wrap">
+            <input class="input" type="password" id="confirmNewPassword" placeholder="Confirm new password..." required />
+            <button type="button" class="toggle-password" data-target="confirmNewPassword" aria-label="Show password">
+              <svg viewBox="0 0 24 24" class="eye-open">
+                <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+
+          <p id="forgotMsg" class="formMsg"></p>
+
+          <button type="submit" class="btn wide gradBlue">Reset Password</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <div id="login-success-overlay">
+    <img src="../assets/images/logo.png" alt="RackTrack Logo">
+  </div>
+
+  <script>
+    function closeAdminCard(){
+      const card = document.getElementById("frame");
+      card.classList.add("closing");
+
+      setTimeout(() => {
+        window.location.href = "role.html";
+      }, 350);
+    }
+
+    function openCreate(event) {
+      event.preventDefault();
+      document.getElementById("overlay").style.display = "block";
+      document.getElementById("createModal").style.display = "flex";
+    }
+
+    function openForgot(event) {
+      event.preventDefault();
+      document.getElementById("overlay").style.display = "block";
+      document.getElementById("forgotModal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("overlay").style.display = "none";
+      document.getElementById("createModal").style.display = "none";
+      document.getElementById("forgotModal").style.display = "none";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const adminForm = document.getElementById("adminForm");
+      const createForm = document.getElementById("createForm");
+      const forgotForm = document.getElementById("forgotForm");
+
+      const passwordInput = document.getElementById("password");
+      const confirmPasswordInput = document.getElementById("confirmPassword");
+      const createMsg = document.getElementById("createMsg");
+
+      const pwBar = document.getElementById("pwBar");
+      const pwHint = document.getElementById("pwHint");
+      const pwWeak = document.getElementById("pwWeak");
+      const pwMedium = document.getElementById("pwMedium");
+      const pwStrong = document.getElementById("pwStrong");
+
+      const reqUpper = document.getElementById("reqUpper");
+      const reqDigits = document.getElementById("reqDigits");
+      const reqAllowed = document.getElementById("reqAllowed");
+
+      function clearStrengthLabels() {
+        pwWeak.classList.remove("active-weak");
+        pwMedium.classList.remove("active-medium");
+        pwStrong.classList.remove("active-strong");
+      }
+
+      function validatePassword(password) {
+        const hasUpper = /[A-Z]/.test(password);
+        const digitCount = (password.match(/\d/g) || []).length;
+        const hasThreeDigits = digitCount >= 3;
+        const allowedOnly = /^[A-Za-z0-9]*$/.test(password);
+
+        return {
+          hasUpper,
+          hasThreeDigits,
+          allowedOnly
+        };
+      }
+
+      function updateRequirementItem(element, valid) {
+        if (!element) return;
+        element.classList.toggle("valid", valid);
+        element.classList.toggle("invalid", !valid);
+      }
+
+      function updatePasswordMeter() {
+        if (!passwordInput || !pwBar) return;
+
+        const password = passwordInput.value;
+        const result = validatePassword(password);
+
+        updateRequirementItem(reqUpper, result.hasUpper);
+        updateRequirementItem(reqDigits, result.hasThreeDigits);
+        updateRequirementItem(reqAllowed, result.allowedOnly && password.length > 0);
+
+        clearStrengthLabels();
+
+        if (!password.length) {
+          pwBar.style.width = "0%";
+          pwBar.style.background = "#d1d5db";
+          pwHint.textContent = "Use at least 1 uppercase and 3 numbers. No symbols.";
+          updateRequirementItem(reqAllowed, false);
+          return;
+        }
+
+        let score = 0;
+        if (result.hasUpper) score++;
+        if (result.hasThreeDigits) score++;
+        if (result.allowedOnly) score++;
+
+        if (score === 1) {
+          pwBar.style.width = "33%";
+          pwBar.style.background = "#c94848";
+          pwHint.textContent = "Weak password";
+          pwWeak.classList.add("active-weak");
+        } else if (score === 2) {
+          pwBar.style.width = "66%";
+          pwBar.style.background = "#f2b14c";
+          pwHint.textContent = "Medium password";
+          pwMedium.classList.add("active-medium");
+        } else {
+          pwBar.style.width = "100%";
+          pwBar.style.background = "#2f8d46";
+          pwHint.textContent = "Strong password";
+          pwStrong.classList.add("active-strong");
+        }
+      }
+
+      if (passwordInput) {
+        passwordInput.addEventListener("input", updatePasswordMeter);
+      }
+
+      if (adminForm) {
+        adminForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+
+          const username = document.getElementById("loginUsername").value.trim();
+          const password = document.getElementById("loginPassword").value.trim();
+          const msg = document.getElementById("loginMsg");
+
+          if (!username || !password) {
+            msg.textContent = "Please enter your User ID and password.";
+            msg.className = "formMsg error";
+            return;
+          }
+
+          localStorage.setItem("racktrackUserRole", "admin");
+          window.location.href = "dashboard.html";
+        });
+      }
+
+      if (createForm) {
+        createForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+
+          const password = passwordInput.value.trim();
+          const confirmPassword = confirmPasswordInput.value.trim();
+
+          const result = validatePassword(password);
+
+          if (!result.hasUpper || !result.hasThreeDigits || !result.allowedOnly) {
+            createMsg.textContent = "Password does not meet the required format.";
+            createMsg.className = "formMsg error";
+            return;
+          }
+
+          if (password !== confirmPassword) {
+            createMsg.textContent = "Passwords do not match.";
+            createMsg.className = "formMsg error";
+            return;
+          }
+
+          createMsg.textContent = "Account created successfully.";
+          createMsg.className = "formMsg success";
+
+          setTimeout(() => {
+            closeModal();
+            createForm.reset();
+            updatePasswordMeter();
+            createMsg.textContent = "";
+            createMsg.className = "formMsg";
+          }, 900);
+        });
+      }
+
+      if (forgotForm) {
+        forgotForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+
+          const newPassword = document.getElementById("newPassword").value.trim();
+          const confirmNewPassword = document.getElementById("confirmNewPassword").value.trim();
+          const forgotMsg = document.getElementById("forgotMsg");
+
+          const result = validatePassword(newPassword);
+
+          if (!result.hasUpper || !result.hasThreeDigits || !result.allowedOnly) {
+            forgotMsg.textContent = "New password must have 1 uppercase, 3 numbers, and no symbols.";
+            forgotMsg.className = "formMsg error";
+            return;
+          }
+
+          if (newPassword !== confirmNewPassword) {
+            forgotMsg.textContent = "Passwords do not match.";
+            forgotMsg.className = "formMsg error";
+            return;
+          }
+
+          forgotMsg.textContent = "Password reset successful.";
+          forgotMsg.className = "formMsg success";
+
+          setTimeout(() => {
+            closeModal();
+            forgotForm.reset();
+            forgotMsg.textContent = "";
+            forgotMsg.className = "formMsg";
+          }, 900);
+        });
+      }
+
+      document.querySelectorAll(".toggle-password").forEach(button => {
+        button.addEventListener("click", () => {
+          const targetId = button.getAttribute("data-target");
+          const input = document.getElementById(targetId);
+          if (!input) return;
+
+          input.type = input.type === "password" ? "text" : "password";
+        });
+      });
+
+      updatePasswordMeter();
+    });
+  </script>
+</body>
+</html>

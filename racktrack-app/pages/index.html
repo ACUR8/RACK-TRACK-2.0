@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loading...</title>
+
+  <link rel="icon" type="image/png" href="../assets/images/logo.png" />
+  <link rel="shortcut icon" href="../assets/images/logo.png" />
+  <link rel="apple-touch-icon" href="../assets/images/logo.png" />
+
+  <style>
+    body { margin: 0; overflow: hidden; }
+
+    #intro-overlay{
+      position: fixed;
+      inset: 0;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 1;
+      transition: opacity 0.8s ease;
+    }
+
+    .logo{
+      width: 180px;
+      opacity: 0;
+      transform: scale(0.5);
+      animation: popUp 1s ease-out forwards;
+    }
+
+    @keyframes popUp{
+      0%   { opacity: 0; transform: scale(0.5); }
+      60%  { opacity: 1; transform: scale(1.15); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="intro-overlay">
+    <img src="../assets/images/logo.png" alt="Logo" class="logo">
+  </div>
+
+  <script>
+    const SHOW_TIME = 2000;
+    const FADE_TIME = 800;
+
+    setTimeout(() => {
+      const overlay = document.getElementById("intro-overlay");
+      overlay.style.opacity = "0";
+
+      setTimeout(() => {
+        sessionStorage.setItem("cameFromSplash", "1");
+        window.location.href = "role.html";
+      }, FADE_TIME);
+
+    }, SHOW_TIME);
+  </script>
+</body>
+</html>

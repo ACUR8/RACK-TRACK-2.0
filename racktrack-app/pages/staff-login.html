@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RackTrack | Staff Login</title>
+
+    <link rel="icon" type="image/png" href="../assets/images/logo.png" />
+  <link rel="shortcut icon" href="../assets/images/logo.png" />
+  <link rel="apple-touch-icon" href="../assets/images/logo.png" />
+
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+
+<script type="module">
+  import { setSession } from "./js/auth.js";
+
+  // Call this when YOUR login is successful
+  function connectToDashboard(userName, username){
+    setSession({
+      user: { name: userName || "Staff", username: username || "staff", role: "staff" },
+      permissions: { create: true, read: true, update: false, delete: false },
+      issuedAt: Date.now()
+    });
+    window.location.href = "dashboard.html";
+  }
+
+  // Example usage:
+  // connectToDashboard("Yaketsu Kai", "yaketsu");
+</script>
+<body class="theme-staff">
+  <button class="back-btn" onclick="goBack()">
+    <svg viewBox="0 0 24 24">
+      <path d="M15 18L9 12L15 6"/>
+    </svg>
+  </button>
+
+  <div class="bg"></div>
+  <div class="bgGlow"></div>
+
+  <main class="screen">
+    <section class="glassFrame staffFrame" id="frame">
+      <div class="loginCard">
+        <h2 class="loginTitle">
+          Log in as Staff
+          <span class="miniIcon">
+            <img src="../assets/images/SF.svg" alt="Staff Icon">
+          </span>
+        </h2>
+
+        <p class="loginSub">See your growth and get support!</p>
+
+        <form class="form" id="staffForm">
+          <label class="label">Username</label>
+          <input class="input" id="loginUsername" type="text" placeholder="Enter your username..." required />
+
+          <label class="label">Password:</label>
+          <input class="input" id="loginPassword" type="password" placeholder="Enter your password..." required />
+
+          <div class="rowBetween">
+            <label class="check">
+              <input type="checkbox" />
+              <span>Remember me</span>
+            </label>
+
+            <!-- ✅ Popup trigger -->
+            <a class="link" href="#" onclick="openForgot(event)">Forgot Password</a>
+          </div>
+
+          <button class="btn wide gradBlue" type="submit">Log in</button>
+
+          <p class="bottomText">
+            Not registered yet?
+            <!-- ✅ Popup trigger -->
+            <a class="link" href="#" onclick="openCreate(event)">Create an account</a>
+          </p>
+
+          <p id="loginMsg" class="formMsg"></p>
+        </form>
+      </div>
+
+      <div class="infoPanel">
+        <img class="brandLogo" src="../assets/images/logo.png" alt="RackTrack logo" />
+        <p class="infoText">
+          RackTrack is a Point-of-Sale (POS) and Inventory Management System designed to “track what’s on the rack”
+          for clothing store owners and staff.
+        </p>
+      </div>
+    </section>
+
+    <!-- ✅ Overlay -->
+    <div class="overlay" id="overlay" onclick="closeModal()"></div>
+
+    <!-- ✅ CREATE ACCOUNT MODAL -->
+    <div class="modal" id="createModal">
+  <div class="modalCard">
+    <button class="closeBtn" type="button" onclick="closeModal()">✕</button>
+
+    <h2 class="modalTitle">Create Account</h2>
+    <p class="modalSub">Fill in your details to create a username and password.</p>
+
+    <form class="form modalForm" id="createForm">
+      <label class="label">Full Name</label>
+      <input class="input" type="text" id="fullName" placeholder="Enter your full name..." required />
+
+      <label class="label">Email</label>
+      <input class="input" type="email" id="email" placeholder="Enter your email..." required />
+
+      <label class="label">Username</label>
+      <input class="input" type="text" id="username" placeholder="Create a username..." required />
+
+      <label class="label">Password</label>
+<input class="input"
+       type="password"
+       id="password"
+       placeholder="Create a password..."
+       title="Password must be exactly 8 characters, contain 1 uppercase letter and 1 number. No special symbols allowed."
+       required />
+      <label class="label">Confirm Password</label>
+      <input class="input" type="password" id="confirmPassword" placeholder="Confirm your password..." required />
+
+      <p id="createMsg" class="formMsg"></p>
+
+      <button type="submit" class="btn wide gradBlue">Create Account</button>
+    </form>
+  </div>
+</div>
+
+    <!-- ✅ FORGOT PASSWORD MODAL -->
+    <div class="modal" id="forgotModal">
+  <div class="modalCard">
+    <button class="closeBtn" type="button" onclick="closeModal()">✕</button>
+
+    <h2 class="modalTitle">Reset Password</h2>
+    <p class="modalSub">Enter your account and set a new password.</p>
+
+    <form class="form modalForm" id="forgotForm">
+      <label class="label">Username or Email</label>
+      <input class="input" type="text" id="identifier" placeholder="Enter username or email..." required />
+
+      <label class="label">New Password</label>
+      <input class="input" type="password" id="newPassword" placeholder="Enter new password..." required />
+
+      <label class="label">Confirm Password</label>
+      <input class="input" type="password" id="confirmNewPassword" placeholder="Confirm new password..." required />
+
+      <p id="forgotMsg" class="formMsg"></p>
+
+      <button type="submit" class="btn wide gradBlue">Reset Password</button>
+    </form>
+  </div>
+</div>
+
+  </main>
+
+  <script>
+    function goBack(){
+      window.location.href = "role.html";
+    }
+  </script>
+
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

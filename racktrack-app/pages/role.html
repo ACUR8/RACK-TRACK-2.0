@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RackTrack | Choose Role</title>
+
+  <link rel="icon" type="image/png" href="../assets/images/logo.png" />
+  <link rel="shortcut icon" href="../assets/images/logo.png" />
+  <link rel="apple-touch-icon" href="../assets/images/logo.png" />
+
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+
+<body class="theme-role">
+  <div class="bg"></div>
+  <div class="bgGlow"></div>
+
+  <main class="screen">
+    <section class="glassFrame roleFrame" id="frame">
+      <div class="roleLeft">
+        <h2>Welcome!</h2>
+        <p class="sub">Choose your role!</p>
+
+        <div class="roleBtns">
+          <button class="btn roleBtn light" data-go="staff-login.html" type="button">
+            <span class="btnIcon">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M20 21a8 8 0 1 0-16 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span class="btnText">Log in as Staff</span>
+          </button>
+
+          <button class="btn roleBtn primary" data-go="admin-login.html" type="button">
+            <span class="btnIcon">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 2 20 6v6c0 5-3.4 9.4-8 10-4.6-.6-8-5-8-10V6l8-4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M9.5 12.2 11.2 14l3.6-4.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="btnText">Log in as Admin</span>
+          </button>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("[data-go]").forEach(button => {
+      button.addEventListener("click", () => {
+        const target = button.getAttribute("data-go");
+        if (target) {
+          window.location.href = target;
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>
