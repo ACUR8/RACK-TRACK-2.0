@@ -38,22 +38,29 @@ INSERT INTO categories (category_name, category_color) VALUES
 -- =========================================
 -- 3) PRODUCTS
 -- =========================================
+Select * from products;
 
+USE racktrack_db;
 
 CREATE TABLE products (
-    product_id VARCHAR(30) AUTO_INCREMENT PRIMARY KEY,
-    barcode VARCHAR(50) NOT NULL UNIQUE,
+    product_id INT AUTO_INCREMENT PRIMARY KEY,
+
+    barcode VARCHAR(30) NOT NULL UNIQUE,
     sku VARCHAR(100) NOT NULL UNIQUE,
-    Supplier VARCHAR(50),
+
+    supplier VARCHAR(50),
     product_name VARCHAR(100) NOT NULL,
     color VARCHAR(50) NOT NULL,
     size VARCHAR(20) NOT NULL,
     material VARCHAR(50) NOT NULL,
     category_id INT NOT NULL,
+
     cost DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     srp DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+
     image_path VARCHAR(255) DEFAULT NULL,
-    -- What's this? status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+    status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
@@ -63,12 +70,14 @@ CREATE TABLE products (
         ON DELETE RESTRICT
 );
 
+-- goods 
 INSERT INTO products (
     barcode, sku, supplier, product_name, color, size, material, category_id, cost, srp, image_path, status
 ) VALUES
-('100000000001', 'CB-AGR-M-LS','LaCreacion', 'Cherry Blossom', 'Acid Gray', 'M', 'Cotton', 3, 250.00, 499.00, NULL, 'active'),
-('100000000002', 'CB-AGR-L-LS','LaCreacion', 'Cherry Blossom', 'Acid Gray', 'L', 'Cotton', 3, 250.00, 499.00, NULL, 'active'),
-('100000000003', 'ESS-BLK-M-TS','LaCreacion', 'Essential Tee', 'Black', 'M', 'Polyester', 1, 180.00, 350.00, NULL, 'active');
+('RT-PRD-00001', 'CB-AGR-M-COT-LGSL', 'LaCreacion', 'Cherry Blossom', 'Acid Gray', 'M', 'Cotton', 3, 250.00, 499.00, NULL, 'active'),
+('RT-PRD-00002', 'CB-AGR-L-COT-LGSL', 'LaCreacion', 'Cherry Blossom', 'Acid Gray', 'L', 'Cotton', 3, 250.00, 499.00, NULL, 'active'),
+('RT-PRD-00003', 'ESS-BLK-M-POL-SHRT', 'LaCreacion', 'Essential Tee', 'Black', 'M', 'Polyester', 1, 180.00, 350.00, NULL, 'active');
+
 
 -- =========================================
 -- 4) INVENTORY
@@ -217,10 +226,10 @@ INSERT INTO stock_movements (
 
 
 -- =========================================
--- 9) VOID_TRANSACTIONS
+-- 9) VOID_TRANSACTIONS (STAFF VIEW)
 -- =========================================
 CREATE TABLE void_transactions (
-    void_id INT AUTO_INCREMENT PRIMARY KEY,
+    void_id INT AUTO_INCREMENT PRIMARY KEY,productsproducts
     sale_item_id INT NOT NULL,
     reason VARCHAR(100) NOT NULL,
     note TEXT DEFAULT NULL,
@@ -273,5 +282,4 @@ INSERT INTO refund_transactions (
 ) VALUES
 (3, 'Damaged Item', 'Customer returned item with issue', 1),
 (2, 'Wrong Size', 'Requested exchange/refund after fitting', 1);
-
 
