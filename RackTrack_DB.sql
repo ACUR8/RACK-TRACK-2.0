@@ -39,9 +39,10 @@ INSERT INTO categories (category_name, category_color) VALUES
 -- 3) PRODUCTS
 -- =========================================
 
+
 CREATE TABLE products (
-    product_id INT AUTO_INCREMENT PRIMARY KEY,
-    -- barcode VARCHAR(50) NOT NULL UNIQUE,
+    product_id VARCHAR(30) AUTO_INCREMENT PRIMARY KEY,
+    barcode VARCHAR(50) NOT NULL UNIQUE,
     sku VARCHAR(100) NOT NULL UNIQUE,
     Supplier VARCHAR(50),
     product_name VARCHAR(100) NOT NULL,
@@ -52,7 +53,7 @@ CREATE TABLE products (
     cost DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     srp DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     image_path VARCHAR(255) DEFAULT NULL,
-    status ENUM('active', 'inactive') NOT NULL DEFAULT 'active', -- INCLUDE IN UI 
+    -- What's this? status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
@@ -77,7 +78,7 @@ CREATE TABLE inventory (
     inventory_id INT AUTO_INCREMENT PRIMARY KEY,
     product_id INT NOT NULL,
     quantity INT NOT NULL DEFAULT 0,
-    low_stock_threshold INT DEFAULT 5, -- INCLUDE IN SETTINGS-to change default "low stock alert"
+    low_stock_threshold INT DEFAULT 5,
     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_inventory_productID
@@ -180,13 +181,13 @@ INSERT INTO sale_items (
 (2, 3, 1, 180.00, 350.00, 350.00, 170.00);
 
 -- =========================================
--- 😎 STOCK_MOVEMENTS
+-- 8) STOCK_MOVEMENTS
 -- =========================================
 
 CREATE TABLE stock_movements (
     -- San galing tooo? movement_id INT AUTO_INCREMENT PRIMARY KEY,
     product_id INT NOT NULL,
-    movement_type ENUM('in', 'out', 'adjustment', 'void', 'refund') NOT NULL,
+    movement_type ENUM('stock in', 'stock out', 'adjustment', 'void', 'refund') NOT NULL,
     quantity_before INT NOT NULL,
     quantity_change INT NOT NULL,
     quantity_after INT NOT NULL,
@@ -244,7 +245,7 @@ INSERT INTO void_transactions (
 (2, 'Duplicate Transaction', 'Scanned twice', 1);
 
 -- =========================================
--- 10) REFUND_TRANSACTIONS
+-- 10) REFUND_TRANSACTIONS (FUTURE FEATURE)
 -- =========================================
 select * from refund_transactions;
 
@@ -272,3 +273,5 @@ INSERT INTO refund_transactions (
 ) VALUES
 (3, 'Damaged Item', 'Customer returned item with issue', 1),
 (2, 'Wrong Size', 'Requested exchange/refund after fitting', 1);
+
+
