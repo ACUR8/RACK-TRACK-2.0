@@ -2,13 +2,17 @@ CREATE DATABASE racktrack_db;
 USE racktrack_db;
 
 -- =========================================
--- 1) USERS
+-- 1) USERS	
 -- =========================================
 
 CREATE TABLE users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
-    full_name VARCHAR(100) NOT NULL,
-    username VARCHAR(50) NOT NULL UNIQUE,
+    surname VARCHAR (50) NOT NULL, 
+    first_name VARCHAR (50) NOT NULL, 
+    mi VARCHAR (50) NOT NULL, 
+    email VARCHAR (50) NOT NULL, 
+    -- full_name VARCHAR(100) NOT NULL, 
+    username VARCHAR(50) NOT NULL UNIQUE, 
     password_hash VARCHAR(255) NOT NULL,
     role ENUM('admin', 'staff') NOT NULL DEFAULT 'staff',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -127,7 +131,7 @@ CREATE TABLE sales (
     sale_id INT AUTO_INCREMENT PRIMARY KEY,
     receipt_no VARCHAR(50) NOT NULL UNIQUE,
     customer_id INT NOT NULL,
-    -- San galing to? cashier_id INT NOT NULL,
+    cashier_name Varchar(100) NOT NULL,
     subtotal DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     discount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     total DECIMAL(10,2) NOT NULL DEFAULT 0.00,
@@ -282,4 +286,3 @@ INSERT INTO refund_transactions (
 ) VALUES
 (3, 'Damaged Item', 'Customer returned item with issue', 1),
 (2, 'Wrong Size', 'Requested exchange/refund after fitting', 1);
-
