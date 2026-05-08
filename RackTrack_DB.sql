@@ -16,13 +16,20 @@ CREATE TABLE users (
     password_hash VARCHAR(255) NOT NULL,
     role ENUM('admin', 'staff') NOT NULL DEFAULT 'staff',
     
-    -- account_status ENUM('pending', 'active', 'inactive', 'blocked') DEFAULT 'pending',
+    -- FOR SECURITY PURPOSES, WILL APPLY AFTER DB IS CONNECTED FOR EACH MODULES (LOGIN, INVENTORY, AND POS)
+    -- account_status ENUM('pending', 'active', 'inactive', 'blocked') DEFAULT 'pending', 
 	-- failed_attempts INT DEFAULT 0,
 	-- lock_until DATETIME DEFAULT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-
+INSERT INTO users (
+    surname, first_name, middle_initial, email, username, password_hash, role
+) VALUES (
+    'Mapalad', 'Clarence', NULL, 'admin@racktrack.com', 'admin', 'admin123', 'admin'
+);
 
 -- =========================================
 -- 2) CATEGORIES (Goods)
@@ -33,9 +40,15 @@ CREATE TABLE categories (
     
     category_name VARCHAR(50) NOT NULL UNIQUE,
     category_color VARCHAR(20) DEFAULT '#2f8d46',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+INSERT INTO categories (category_name, category_color) VALUES
+('T-Shirt', '#756f66'),
+('Hoodie', '#935d06'),
+('Long Sleeve', '#097981'),
+('Sweat Pants', '#5096f2');
 
 
 -- =========================================
@@ -101,7 +114,10 @@ CREATE TABLE inventory (
         ON DELETE CASCADE
 );
 
-
+INSERT INTO inventory (product_id, quantity, low_stock_threshold) VALUES
+(1, 50, 5),
+(2, 30, 5),
+(3, 100, 5);
 
 -- =========================================
 -- 5) CUSTOMERS (Goods)
@@ -155,12 +171,26 @@ CREATE TABLE sales (
         ON DELETE RESTRICT
 );
 
+INSERT INTO sales (
+receipt_no,customer_id, cashier_id, subtotal, discount, total, amount_paid, change_amount, note, payment_method, sale_status
+) VALUES (
+    'RCPT-00001',
+    1,
+    1,
+    998.00,
+    0.00,
+    998.00,
+    1000.00,
+    2.00,
+    'Sample transaction',
+    'cash',
+    'completed'
+);
 
 -- =========================================
 -- 7) SALE_ITEMS (Goods)
 -- =========================================
 
-SELECT * FROM SALE_ITEMS;
 
 CREATE TABLE sale_items (
     sale_item_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -184,6 +214,18 @@ CREATE TABLE sale_items (
         ON UPDATE CASCADE
         ON DELETE RESTRICT
 );
+
+INSERT INTO sale_items (
+    sale_id,
+    product_id,
+    quantity,
+    cost,
+    srp,
+    line_total,
+    line_profit
+) VALUES
+(1, 1, 1, 250.00, 499.00, 499.00, 249.00),
+(1, 2, 1, 250.00, 499.00, 499.00, 249.00);
 
 -- =========================================
 -- 8) STOCK_MOVEMENTS (Goods, this is used for "Inventory Movement History")
@@ -214,6 +256,21 @@ CREATE TABLE stock_movements (
         ON UPDATE CASCADE
         ON DELETE RESTRICT
 );
+
+INSERT INTO stock_movements (
+    product_id,
+    movement_type,
+    quantity_before,
+    quantity_change,
+    note,
+    quantity_after,
+    reference_type,
+    reference_id,
+    created_by
+) VALUES
+(1, 'Stock In', 0, 50, 'Initial stock', 50, 'manual', NULL, 1),
+(1, 'Sold', 50, -1, 'POS transaction', 49, 'sale', 1, 1);
+
 
 
 
