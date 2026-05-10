@@ -34,6 +34,8 @@ INSERT INTO users (
 -- =========================================
 -- 2) CATEGORIES (Goods)
 -- =========================================
+use Racktrack_db;
+Select * from Categories;
 
 CREATE TABLE categories (
     category_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -56,6 +58,7 @@ INSERT INTO categories (category_name, category_color) VALUES
 -- =========================================
 
 USE racktrack_db;
+SELECT * FROM PRODUCTS;
 
 CREATE TABLE products (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
