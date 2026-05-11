@@ -14,7 +14,7 @@ CREATE TABLE users (
     email VARCHAR(100) NOT NULL UNIQUE,
     username VARCHAR(50) NOT NULL UNIQUE, 
     password_hash VARCHAR(255) NOT NULL,
-    role ENUM('admin', 'staff') NOT NULL DEFAULT 'staff',
+    role ENUM('admin', 'staff') NOT NULL DEFAULT 'staff',	
     
     -- FOR SECURITY PURPOSES, WILL APPLY AFTER DB IS CONNECTED FOR EACH MODULES (LOGIN, INVENTORY, AND POS)
     -- account_status ENUM('pending', 'active', 'inactive', 'blocked') DEFAULT 'pending', 
@@ -34,10 +34,9 @@ INSERT INTO users (
 -- =========================================
 -- 2) CATEGORIES (Goods)
 -- =========================================
-
+use Racktrack_db;
 Select * from Categories;
 
-use Racktrack_db;
 CREATE TABLE categories (
     category_id INT AUTO_INCREMENT PRIMARY KEY,
     
@@ -61,7 +60,6 @@ INSERT INTO categories (category_name, category_color) VALUES
 USE racktrack_db;
 SELECT * FROM PRODUCTS;
 
-use Racktrack_db;
 CREATE TABLE products (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
 
@@ -104,7 +102,6 @@ INSERT INTO products (
 -- 4) INVENTORY (Goods)
 -- =========================================
 
-use Racktrack_db;
 CREATE TABLE inventory (
     inventory_id INT AUTO_INCREMENT PRIMARY KEY,
     
@@ -129,7 +126,6 @@ INSERT INTO inventory (product_id, quantity, low_stock_threshold) VALUES
 -- 5) CUSTOMERS (Goods)
 -- =========================================
 
-use Racktrack_db;
 CREATE TABLE customers (
     customer_id INT AUTO_INCREMENT PRIMARY KEY,
     
@@ -149,21 +145,20 @@ INSERT INTO customers (customer_name, contact, address) VALUES
 -- 6) SALES 
 -- =========================================
 
-use Racktrack_db;
 CREATE TABLE sales (
     sale_id INT AUTO_INCREMENT PRIMARY KEY,
     
     receipt_no VARCHAR(50) NOT NULL UNIQUE,
     
-    customer_id INT NOT NULL,
-    cashier_id INT NOT NULL, 
+    customer_id INT DEFAULT NULL,
+    user_id INT NOT NULL, 
     
     subtotal DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     discount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     total DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     amount_paid DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     change_amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-    note TEXT DEFAULT NULL,	
+    note TEXT DEFAULT NULL,
     payment_method ENUM('cash', 'e-money', 'online bank') DEFAULT 'cash',
     sale_status ENUM('completed', 'voided', 'refunded') DEFAULT 'completed',
     sale_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -173,14 +168,14 @@ CREATE TABLE sales (
         ON UPDATE CASCADE
         ON DELETE RESTRICT,
 
-    CONSTRAINT fk_sales_cashierID
-        FOREIGN KEY (cashier_id) REFERENCES users(user_id)
+    CONSTRAINT fk_sales_userID
+        FOREIGN KEY (user_id) REFERENCES users(user_id)
         ON UPDATE CASCADE
         ON DELETE RESTRICT
 );
 
 INSERT INTO sales (
-receipt_no,customer_id, cashier_id, subtotal, discount, total, amount_paid, change_amount, note, payment_method, sale_status
+receipt_no,customer_id, user_id, subtotal, discount, total, amount_paid, change_amount, note, payment_method, sale_status
 ) VALUES (
     'RCPT-00001',
     1,
@@ -198,9 +193,8 @@ receipt_no,customer_id, cashier_id, subtotal, discount, total, amount_paid, chan
 -- =========================================
 -- 7) SALE_DETAILS (Goods)
 -- =========================================
--- Sale_items change it to "Sale_details"
+use racktrack_db;
 
-use Racktrack_db;
 CREATE TABLE sale_details (
     sale_details_id INT AUTO_INCREMENT PRIMARY KEY,
     
@@ -213,12 +207,12 @@ CREATE TABLE sale_details (
     line_total DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     line_profit DECIMAL(10,2) NOT NULL DEFAULT 0.00,
 
-    CONSTRAINT fk_sale_items_saleID
+    CONSTRAINT fk_sale_details_saleID
         FOREIGN KEY (sale_id) REFERENCES sales(sale_id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
 
-    CONSTRAINT fk_sale_items_productID
+    CONSTRAINT fk_sale_details_productID
         FOREIGN KEY (product_id) REFERENCES products(product_id)
         ON UPDATE CASCADE
         ON DELETE RESTRICT
@@ -239,7 +233,7 @@ INSERT INTO sale_details (
 -- =========================================
 -- 8) STOCK_MOVEMENTS (Goods, this is used for "Inventory Movement History")
 -- =========================================
-use Racktrack_db;
+
 CREATE TABLE stock_movements (			
     movement_id INT AUTO_INCREMENT PRIMARY KEY,
     
@@ -280,8 +274,12 @@ INSERT INTO stock_movements (
 (1, 'Stock In', 0, 50, 'Initial stock', 50, 'manual', NULL, 1),
 (1, 'Sold', 50, -1, 'POS transaction', 49, 'sale', 1, 1);
 
-select * from products
 
+
+
+-- =========================================
+-- System Settings
+-- =========================================
 
 -- =========================================
 -- System Settings
@@ -291,13 +289,8 @@ select * from products
 
 
 -- =========================================
--- System Settings
+-- TABLES BELOW ARE NOT INCLUDED AS OF THE MOMENT. DON'T DELETE.
 -- =========================================
-
-
-
-
-
 
 -- =========================================
 -- VOID_TRANSACTIONS (STAFF VIEW)
