@@ -5,6 +5,7 @@ USE racktrack_db;
 -- 1) USERS	(Goods)
 -- =========================================
 
+USE racktrack_db;
 CREATE TABLE users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     
@@ -34,9 +35,9 @@ INSERT INTO users (
 -- =========================================
 -- 2) CATEGORIES (Goods)
 -- =========================================
-use Racktrack_db;
 Select * from Categories;
 
+use Racktrack_db;
 CREATE TABLE categories (
     category_id INT AUTO_INCREMENT PRIMARY KEY,
     
@@ -56,10 +57,9 @@ INSERT INTO categories (category_name, category_color) VALUES
 -- =========================================
 -- 3) PRODUCTS (Goods)
 -- =========================================
-
-USE racktrack_db;
 SELECT * FROM PRODUCTS;
 
+USE racktrack_db;
 CREATE TABLE products (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
 
@@ -101,7 +101,10 @@ INSERT INTO products (
 -- =========================================
 -- 4) INVENTORY (Goods)
 -- =========================================
+SELECT * FROM inventory;
 
+
+USE racktrack_db;
 CREATE TABLE inventory (
     inventory_id INT AUTO_INCREMENT PRIMARY KEY,
     
@@ -126,6 +129,7 @@ INSERT INTO inventory (product_id, quantity, low_stock_threshold) VALUES
 -- 5) CUSTOMERS (Goods)
 -- =========================================
 
+USE racktrack_db;
 CREATE TABLE customers (
     customer_id INT AUTO_INCREMENT PRIMARY KEY,
     
@@ -145,6 +149,7 @@ INSERT INTO customers (customer_name, contact, address) VALUES
 -- 6) SALES 
 -- =========================================
 
+USE racktrack_db;
 CREATE TABLE sales (
     sale_id INT AUTO_INCREMENT PRIMARY KEY,
     
@@ -193,6 +198,7 @@ receipt_no,customer_id, user_id, subtotal, discount, total, amount_paid, change_
 -- =========================================
 -- 7) SALE_DETAILS (Goods)
 -- =========================================
+
 use racktrack_db;
 
 CREATE TABLE sale_details (
@@ -234,12 +240,13 @@ INSERT INTO sale_details (
 -- 8) STOCK_MOVEMENTS (Goods, this is used for "Inventory Movement History")
 -- =========================================
 
+USE racktrack_db;
 CREATE TABLE stock_movements (			
     movement_id INT AUTO_INCREMENT PRIMARY KEY,
     
     product_id INT NOT NULL,
     
-    movement_type ENUM('Stock In', 'Stock Out', 'Sold', 'Adjustment', 'Void', 'Refund') NOT NULL,
+    movement_type ENUM('Stock In', 'Pull Out', 'Sold', 'Adjustment', 'Void', 'Refund') NOT NULL,
     quantity_before INT NOT NULL,
     quantity_change INT NOT NULL,
     note TEXT DEFAULT NULL,
