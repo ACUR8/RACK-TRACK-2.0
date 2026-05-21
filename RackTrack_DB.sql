@@ -5,7 +5,6 @@ USE racktrack_db;
 -- 1) USERS	(Goods)
 -- =========================================
 
-USE racktrack_db;
 CREATE TABLE users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     
@@ -35,9 +34,9 @@ INSERT INTO users (
 -- =========================================
 -- 2) CATEGORIES (Goods)
 -- =========================================
+use Racktrack_db;
 Select * from Categories;
 
-use Racktrack_db;
 CREATE TABLE categories (
     category_id INT AUTO_INCREMENT PRIMARY KEY,
     
@@ -57,9 +56,11 @@ INSERT INTO categories (category_name, category_color) VALUES
 -- =========================================
 -- 3) PRODUCTS (Goods)
 -- =========================================
-SELECT * FROM PRODUCTS;
 
 USE racktrack_db;
+SELECT * FROM PRODUCTS;
+
+
 CREATE TABLE products (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
 
@@ -77,7 +78,7 @@ CREATE TABLE products (
     cost DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     srp DECIMAL(10,2) NOT NULL DEFAULT 0.00,
 
-    image_path VARCHAR(255) DEFAULT NULL,
+    image_path varchar(255) DEFAULT NULL,
     status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -101,10 +102,7 @@ INSERT INTO products (
 -- =========================================
 -- 4) INVENTORY (Goods)
 -- =========================================
-SELECT * FROM inventory;
 
-
-USE racktrack_db;
 CREATE TABLE inventory (
     inventory_id INT AUTO_INCREMENT PRIMARY KEY,
     
@@ -129,7 +127,6 @@ INSERT INTO inventory (product_id, quantity, low_stock_threshold) VALUES
 -- 5) CUSTOMERS (Goods)
 -- =========================================
 
-USE racktrack_db;
 CREATE TABLE customers (
     customer_id INT AUTO_INCREMENT PRIMARY KEY,
     
@@ -148,8 +145,18 @@ INSERT INTO customers (customer_name, contact, address) VALUES
 -- =========================================
 -- 6) SALES 
 -- =========================================
+SHOW TABLES;
+SELECT * FROM sales;
 
-USE racktrack_db;
+DESCRIBE sales;
+
+ALTER TABLE sales
+MODIFY customer_id INT NULL;
+
+SELECT * FROM sales
+ORDER BY sale_id DESC
+LIMIT 5;
+
 CREATE TABLE sales (
     sale_id INT AUTO_INCREMENT PRIMARY KEY,
     
@@ -198,8 +205,14 @@ receipt_no,customer_id, user_id, subtotal, discount, total, amount_paid, change_
 -- =========================================
 -- 7) SALE_DETAILS (Goods)
 -- =========================================
-
 use racktrack_db;
+
+DESCRIBE sale_details;
+
+SELECT *
+FROM sale_details
+ORDER BY sale_details_id DESC
+LIMIT 10;
 
 CREATE TABLE sale_details (
     sale_details_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -237,10 +250,11 @@ INSERT INTO sale_details (
 (1, 2, 1, 250.00, 499.00, 499.00, 249.00);
 
 -- =========================================
--- 8) STOCK_MOVEMENTS (Goods, this is used for "Inventory Movement History")
+-- 8) STOCK_MOVEMENTS ("Inventory Movement History")
 -- =========================================
 
-USE racktrack_db;
+Select * from stock_movements; 
+
 CREATE TABLE stock_movements (			
     movement_id INT AUTO_INCREMENT PRIMARY KEY,
     
